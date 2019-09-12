@@ -121,8 +121,9 @@ TEST(NormalTest, SEQ_LIST_insert) {
 	std::vector<mylib::SeqList<int>>sa_s{ sa_1, sa_2,sa_3,sa_4,sa_5,sa_6,sa_7,sa_8,sa_9,sa_10,sa_11,sa_12};
 	for (auto val = 0; val < 12; ++val) {
 
-		for (auto i = 0; i < sa_s[val].Length(); ++i) {
+		for (auto i = 0; i < val; ++i) {
 			EXPECT_TRUE(sa_s[val] .Insert(val, test_case[i]));
+			//EXPECT_TRUE(sa_s[val].Length(), val + i+2);
 			for (auto j = 0; j <= i; ++j)
 			{
 				int get;
@@ -134,5 +135,85 @@ TEST(NormalTest, SEQ_LIST_insert) {
 }
 
 TEST(NormalTest, SEQ_LIST_remove) {
+	mylib::SeqList<int>sa{ -1,2,44,23,-223,11,24,25,5,2,3,2311 };
+	std::vector<int>case_{ -1,2,44,23,-223,11,24,25,5,2,3,2311 };
+	int get;
+	int index = rand()%12+1;
+	sa.Remove(index, get);
+	case_.erase(case_.begin() + 2);
+	for (auto i = 0; i < 11; ++i)
+	{
+		int g;
+		sa.getData(i+1, g);
+		EXPECT_EQ(g, case_[i]);
+	}
+	mylib::SeqList<int>sa_2{ -1,2,44,23,-223,11,24,25,5,2,3,2311 };
+	std::vector<int>case_2{ -1,2,44,23,-223,11,24,25,5,2,3,2311 };
+	for (auto i = 0; i < 12; ++i) {
+		sa_2.Remove(1, get);
+		case_2.erase(case_2.begin());
+		EXPECT_EQ(sa_2.Length(), 11 - i);
+		for (auto j = 0; j < 11-i; ++j)
+		{
+			int g;
+			sa_2.getData(j + 1, g);
+			EXPECT_EQ(g, case_2[j]);
+		}
+	}
+	mylib::SeqList<int>sa_3{ -1,2,44,23,-223,11,24,25,5,2,3,2311 };
+	std::vector<int>case_3{ -1,2,44,23,-223,11,24,25,5,2,3,2311 };
+	for (auto i = 0; i < 12; ++i) {
+		sa_3.Remove(12-i, get);
+		case_3.erase(case_3.end()-1);
+		EXPECT_EQ(sa_3.Length(), 11 - i);
+		for (auto j = 0; j < 11 - i; ++j)
+		{
+			int g;
+			sa_3.getData(j + 1, g);
+			EXPECT_EQ(g, case_3[j]);
+		}
+	}
+}
 
+TEST(NormalTest, SEQ_LIST_isempty) {
+	mylib::SeqList<int>sa_1;
+	EXPECT_TRUE(sa_1.IsEmpty());
+	mylib::SeqList<int>sa_2{ -1,2 };
+	EXPECT_FALSE(sa_2.IsEmpty());
+	int get;
+	sa_2.Remove(1, get);
+	sa_2.Remove(1, get);
+	EXPECT_TRUE(sa_2.IsEmpty());
+}
+
+TEST(NormalTest, SEQ_LIST_isfull) {
+	mylib::SeqList<int>sa_1{ {1,2},3 };
+	EXPECT_FALSE(sa_1.IsFull());
+	mylib::SeqList<int>sa_2{ {1,2},2 };
+	EXPECT_TRUE(sa_2.IsFull());
+}
+/*
+TEST(NormalTest, SEQ_LIST_sort) {
+	mylib::SeqList<int>sa_1{ -10,-9,-20,1,44,2,3};
+	std::vector<int>case_a{ -20,-10,-9,1,2,3,44 };
+	std::vector<int>case_d{ 44,3,2,1,-9,-10,-20 };
+	sa_1.Sort_A();
+	for (auto i = 0; i < 7; ++i) {
+		int get;
+		sa_1.getData(i + 1, get);
+		EXPECT_EQ(get, case_a[i]);
+	}
+	sa_1.Sort_D();
+	for (auto i = 0; i < 7; ++i) {
+		int get;
+		sa_1.getData(i + 1, get);
+		EXPECT_EQ(get, case_d[i]);
+	}
+}
+*/
+
+TEST(NormalTest, iterators) {
+	mylib::SeqList<int>sa{ 1,2,3,4,5,6,7 };
+	int i = 0;
+	for(auto iter = sa.cbegin();)
 }

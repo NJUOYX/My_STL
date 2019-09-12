@@ -11,6 +11,12 @@ constexpr auto ARRAY_SIZE_WRONG = "array size wrong";
 constexpr auto MEMORY_ALLOCATE_ERROR = "memory allocate error";
 #define THROW_ARRAY_SIZE_WRONG throw std::exception(ARRAY_SIZE_WRONG)
 #define THROW_MEMORY_ALLOCATE_ERROR  throw std::exception(MEMORY_ALLOCATE_ERROR)
+
+template<class T>
+class My_Iterator {
+
+};
+
 namespace mylib {
 	template<class T>
 	class DynamicArray {
@@ -111,9 +117,10 @@ PROTECTED:
 	bool Remove(int i, T& x);
 	bool IsEmpty()const ;
 	bool IsFull()const ;
-	void Sort();
-	void input();
-	void output();
+	std::iterator begin()const;
+	std::iterator<T> const cbegin()const;
+	std::iterator<T> end()const;
+	std::iterator<T> const cend()const;
 	SeqList<T> operator =(SeqList<T>& L);
 PRIVATE:
 	DynamicArray<T>_array;
@@ -186,8 +193,30 @@ inline bool SeqList<T>::Insert(int i, T& x)
 		for (auto j = length; j > i; --j)
 			_array[j] = _array[j-1];
 		_array[i] = x;
+		length++;
 		return true;
 	}
 	return false;
+}
+template<class T>
+inline bool SeqList<T>::Remove(int i, T& x)
+{
+	if (i >= 1 && i <= length) {
+		for (auto j = i; j < length; ++j)
+			_array[j-1] = _array[j];
+		length--;
+		return true;
+	}
+	return false;
+}
+template<class T>
+inline bool SeqList<T>::IsEmpty() const
+{
+	return length == 0;
+}
+template<class T>
+inline bool SeqList<T>::IsFull() const
+{
+	return _array.get_size() == length;
 }
 }
