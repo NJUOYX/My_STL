@@ -70,7 +70,7 @@ TEST(NormalTest, SEQ_LIST_search) {
 	for (auto i = 1; i <= 10; ++i) {
 		EXPECT_EQ(sa.Search(i), i);
 	}
-	EXPECT_EQ(sa.Search(21), SEARCH_FAILED);
+	EXPECT_EQ(sa.Search(21), mylib::SEARCH_FAILED);
 }
 
 TEST(NormalTest, SEQ_LIST_Locate) {
@@ -78,7 +78,7 @@ TEST(NormalTest, SEQ_LIST_Locate) {
 	for (auto i = 1; i <= 10; ++i) {
 		EXPECT_EQ(sa.Locate(i), i);
 	}
-	EXPECT_EQ(sa.Locate(120), LOCATE_FAILED); 
+	EXPECT_EQ(sa.Locate(120), mylib::LOCATE_FAILED); 
 }
 
 TEST(NormalTest, SEQ_LIST_getData) {
@@ -214,6 +214,37 @@ TEST(NormalTest, SEQ_LIST_sort) {
 
 TEST(NormalTest, iterators) {
 	mylib::SeqList<int>sa{ 1,2,3,4,5,6,7 };
-	int i = 0;
-	for(auto iter = sa.cbegin();)
+	int j = 0;
+	for (auto i = sa.begin(); i != sa.end(); ++i) {
+		int get;
+		sa.getData(j + 1, get);
+		EXPECT_EQ(*i, get);
+		++j;
+	}
+	j = 0;
+	for (auto i = sa.cbegin(); i != sa.cend(); ++i) {
+		int get;
+		sa.getData(j + 1, get);
+		EXPECT_EQ(*i, get);
+		++j;
+	}
+}
+
+typedef struct {
+	int a;
+	int b;
+} Case;
+TEST(NormalTest, iterator) {
+	Case test1;
+	test1.a = 1;
+	test1.b = 2;
+	mylib::SeqList<Case>sc{test1};
+	sc.begin()->a = -1;
+	sc.begin()->b = -2;
+	EXPECT_EQ(sc.begin()->a, -1);
+	EXPECT_EQ(sc.begin()->b, -2);
+	EXPECT_EQ((sc.end()-1)->a, -1);
+	EXPECT_EQ((sc.end()-1)->b, -2);
+	EXPECT_EQ(sc.end() - 1, sc.begin());
+	EXPECT_ANY_THROW(sc.end() + 1);
 }
