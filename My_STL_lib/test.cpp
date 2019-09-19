@@ -1,15 +1,31 @@
 #include "pch.h"
 #include"List.h"
+#include"My_algrithom.h"
 #include<vector>
-TEST(TestCaseName, TestName) {
-  EXPECT_EQ(1, 1);
-  EXPECT_TRUE(true);
-}
+#include<iostream>
 
 int main(int argc, char** argv) {
-	srand(0);
-	testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
+	//srand(0);
+	//testing::InitGoogleTest(&argc, argv);
+	//return RUN_ALL_TESTS();
+	int size_a, size_b;
+ 	std::cin >> size_a >> size_b;
+	mylib::SeqList<int>case_1(size_a);
+	mylib::SeqList<int>case_2(size_b);
+	while (size_a--) {
+		int get;
+		std::cin >> get;
+		case_1.push_back(get);
+	}
+	while (size_b--) {
+		int get;
+		std::cin >> get;
+		case_2.push_back(get);
+	}
+	mylib::SeqList<int>outcome(case_1.Size()+case_2.Size());
+	mylib::Merge_by_order(case_1.begin(), case_1.end(), case_2.begin(), case_2.end(), outcome);
+	for (auto i = outcome.begin(); i != outcome.end(); ++i)
+		std::cout << *i << " ";
 }
 
 class ArraySizeTest :public testing::TestWithParam<int> {
@@ -248,3 +264,27 @@ TEST(NormalTest, iterator) {
 	EXPECT_EQ(sc.end() - 1, sc.begin());
 	EXPECT_ANY_THROW(sc.end() + 1);
 }
+
+TEST(NormalTest, merge_alg_test) {
+	mylib::SeqList<int>case_1{ 3, 7, 11 };
+	mylib::SeqList<int>case_2{ 2, 8, 9, 12, 16 };
+	mylib::SeqList<int>outcome(8);
+	//mylib::Merge_exclude_repeat_by_order(case_1.cbegin(), case_1.cend(), case_2.cbegin(), case_2.cend(), outcome.begin());
+	//std::sort(case_1.cbegin(), case_1.cend());
+	mylib::Merge_by_order(case_1.begin(), case_1.end(), case_2.begin(), case_2.end(), outcome);
+	mylib::SeqList<int>test{ 2, 3, 7, 8, 9, 11, 12, 16 };
+	auto i = outcome.cbegin();
+	auto j = test.cbegin();
+	for (; i != outcome.cend() && j != test.cend(); ++i, ++j)
+		EXPECT_EQ(*i , *j);
+	mylib::SeqList<int>case_3{ 1, 4, 6, 7 };
+	mylib::SeqList<int>case_4{4,9};
+	mylib::SeqList<int>out_come_2(6);
+	mylib::SeqList<int>test_2{1,4,4,6,7,9};
+	mylib::Merge_by_order(case_3.begin(), case_3.end(), case_4.begin(), case_4.end(), out_come_2);
+	auto x = out_come_2.begin();
+	auto y = test_2.begin();
+	for (; x != out_come_2.end() && y != test_2.end(); ++i, ++j)
+		EXPECT_EQ(*i, *j);
+}
+
